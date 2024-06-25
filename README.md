@@ -1,2 +1,2 @@
 # golang
-![BE schematic](resources/be.png)
+![BE schematic](resources/be_schem.png)
