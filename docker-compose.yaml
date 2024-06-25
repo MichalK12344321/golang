@@ -11,7 +11,7 @@ services:
     container_name: ne1
     image: "ssh-host:latest"
     ports:
-      - "22"
+      - "2222:22"
     restart: always
     environment:
       SSH_USERS: "nesshuser:1000:1000:nesshpass"
