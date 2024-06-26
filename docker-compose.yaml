@@ -1,4 +1,9 @@
 services:
+  scheduler:
+    container_name: scheduler
+    image: "scheduler:latest"
+    restart: always
+
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3-management
