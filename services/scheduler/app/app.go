@@ -45,7 +45,7 @@ func triggerCollectionHandler(c *gin.Context)  {
     return
   }
   cid := uuid.New()
-  triggerCollectionStatus := TriggerCollectionStatusType{CollectionId: CollectionIdType(cid)}
+  triggerCollectionStatus := TriggerCollectionStatusType{CollectionId: CollectionIdType(cid.String())}
   triggerCollectionStatus.Message = "Triggered collection: " + cid.String()
   c.JSON(http.StatusOK, triggerCollectionStatus)
 }
@@ -79,7 +79,7 @@ type TriggerCollectionInfoType struct {
   Credentials CredentialsInfoType `json:"credentials" binding:"required"`
 }
 
-type CollectionIdType uuid.UUID
+type CollectionIdType string
 
 type TriggerCollectionStatusType struct {
   Message string `json:"message" binding:"required"`
