@@ -20,7 +20,19 @@ services:
     ports:
       - "2222:22"
     restart: always
+    entrypoint: sleep 10000
     environment:
       SSH_USERS: "nesshuser:1000:1000:nesshpass"
       SSH_ENABLE_PASSWORD_AUTH: "true"
       SSH_ENABLE_ROOT_PASSWORD_AUTH: "true"
+
+  collectiondatagateway:
+    container_name: collectiondatagateway
+    image: "collectiondatagateway:latest"
+    ports:
+      - "5555:5555"
+    restart: always
+    environment:
+      - COLLECTION_DATA_GATEWAY_HOST=collectiondatagateway
+      - COLLECTION_DATA_GATEWAY_PORT=5555
+      - COLLECTION_DATA_GATEWAY_BASE_PATH = /api/v1
