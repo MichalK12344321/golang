@@ -1,6 +1,6 @@
 FROM alpine:3.16 AS base
 
-RUN apk update && apk add --no-cache bash~=5 git~=2 openssh~=9 rsync~=3 augeas~=1 shadow~=4 rssh~=2
+RUN apk update && apk add --no-cache bash~=5 git~=2 openssh~=9 rsync~=3 augeas~=1 shadow~=4 rssh~=2 curl~=8
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ARG PORT
