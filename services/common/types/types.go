@@ -7,10 +7,13 @@ type ErrorResponse struct {
 type CollectionIdType string
 type CollectionStatusType string
 const (
-	CollectionStatusCreated = "created"
-	CollectionStatusRunning = "running"
-	CollectionStatusSuccess = "success"
-	CollectionStatusFailure = "failure"
+  CollectionStatusUnset = ""
+  CollectionStatusCreated = "created"
+  CollectionStatusRunning = "running"
+  CollectionStatusSuccess = "success"
+  CollectionStatusFailure = "failure"
+  CollectionStatusFailure = "terminating"
+  CollectionStatusFailure = "terminated"
 )
 
 type CollectionType struct {
@@ -32,5 +35,5 @@ type ConnectionInfoType struct {
 
 type CredentialsInfoType struct {
   User string `json:"user" binding:"required" example:"myuser"`
-  Password string `json:"pass" binding:"required" example:"mypass"`
+  Password string `json:"password" binding:"required" example:"mypass"`
 }
