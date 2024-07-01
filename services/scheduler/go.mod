@@ -2,7 +2,10 @@ module github.com/MichalK12344321/golang/services/scheduler
 
 go 1.18
 
+replace github.com/MichalK12344321/golang/services/common => ../common
+
 require (
+	github.com/MichalK12344321/golang/services/common v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.6.0
 	github.com/swaggo/files v1.0.1

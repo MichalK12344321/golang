@@ -1,11 +1,9 @@
 FROM golang:1.18
 
-WORKDIR /app
-
+WORKDIR /app/scheduler
 COPY go.mod ./
-
 RUN go mod download
-
+COPY ../common ../common
 COPY . .
 
 RUN go build -o main .

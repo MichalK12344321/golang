@@ -7,7 +7,7 @@ docker-build: swag
 	.
 
 swag:
-	~/go/bin/swag init -g app/app.go
+	~/go/bin/swag init --parseDependency -g scheduler/server.go
 
 run:
 	go run .

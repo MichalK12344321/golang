@@ -1,12 +1,12 @@
 package main
 
 import(
-  "fmt"
-
-  "github.com/MichalK12344321/golang/services/scheduler/app"
+  "github.com/MichalK12344321/golang/services/scheduler/scheduler"
 )
 
 func main() {
-  fmt.Println("Hello")
-  app.Start()
+  // place for custom getopt
+  schedulerService := scheduler.NewService()
+  schedulerService.Start()
+  // place for return code
 }
