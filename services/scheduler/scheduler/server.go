@@ -13,11 +13,12 @@ import (
 )
 
 type Server struct {
+  config *Config
   router *gin.Engine
-  messageQueue interfaces.MessageQueue
+  messageQueue interfaces.TriggerMessageQueue
 }
 
-func NewServer(messageQueue interfaces.MessageQueue) *Server {
+func NewServer(config *Config, messageQueue interfaces.TriggerMessageQueue) *Server {
   s := Server{}
   s.messageQueue = messageQueue
   s.router = gin.Default()

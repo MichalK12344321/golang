@@ -6,22 +6,24 @@ import (
   "github.com/MichalK12344321/golang/services/common/types"
 )
 
-type dummyMessageQueue struct{
+type dummyTriggerMessageQueue struct{
 }
 
-func (dmq *dummyMessageQueue)SendTrigger(id types.CollectionIdType , sshInfo types.SshInfoType) error {
+func (dmq *dummyTriggerMessageQueue)SendTrigger(id types.CollectionIdType , sshInfo types.SshInfoType) error {
   fmt.Println("SEND TRIGGER")
   return nil
 }
 
 
 type Service struct {
+  config *Config
   server *Server
 }
 
 func NewService() *Service {
-  server := NewServer(&dummyMessageQueue{})
-  return &Service{server: server}
+  config := NewConfig()
+  server := NewServer(config, &dummyTriggerMessageQueue{})
+  return &Service{config: config, server: server}
 }
 
 func (s *Service) Start() {
