@@ -12,8 +12,8 @@ const (
   CollectionStatusRunning = "running"
   CollectionStatusSuccess = "success"
   CollectionStatusFailure = "failure"
-  CollectionStatusFailure = "terminating"
-  CollectionStatusFailure = "terminated"
+  CollectionStatusTerimating = "terminating"
+  CollectionStatusTerminated = "terminated"
 )
 
 type CollectionType struct {
