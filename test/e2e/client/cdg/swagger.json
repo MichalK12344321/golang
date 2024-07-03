@@ -1,0 +1,185 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.1.0",
+    "title": "cdg",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/collection": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Get collection list",
+        "operationId": "getCollection",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Collections",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/lca_internal_pkg_dto.CollectionDto"
+              }
+            }
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/collection/{id}": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Get collection",
+        "operationId": "getCollectionId",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Id of the Collection",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Collection",
+            "schema": {
+              "$ref": "#/definitions/lca_internal_pkg_dto.CollectionDto"
+            }
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/collection/{id}/archive": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "File",
+        "operationId": "getCollectionIdArchive",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Id of the Collection",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File contents"
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "Get application version",
+        "operationId": "getVersion",
+        "produces": [
+          "text/plain"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Version number"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "lca_internal_pkg_dto.CollectionDto": {
+      "type": "object",
+      "required": [
+        "status",
+        "error",
+        "path"
+      ],
+      "properties": {
+        "error": {
+          "type": "string",
+          "example": "failed to run"
+        },
+        "host": {
+          "type": "string",
+          "example": "ne"
+        },
+        "id": {
+          "type": "string",
+          "example": "0ccd924e-751e-4e1c-b51c-d3956d0cf2a7"
+        },
+        "password": {
+          "type": "string",
+          "example": "root"
+        },
+        "path": {
+          "type": "string",
+          "example": "/var/data/123.zip"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32",
+          "example": "22"
+        },
+        "script": {
+          "type": "string",
+          "example": "/scripts/hello.sh"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "initialized",
+            "started",
+            "failure",
+            "success"
+          ],
+          "example": "started"
+        },
+        "user": {
+          "type": "string",
+          "example": "root"
+        }
+      }
+    }
+  }
+}

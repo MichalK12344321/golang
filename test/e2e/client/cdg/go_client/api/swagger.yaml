@@ -1,0 +1,141 @@
+---
+swagger: "2.0"
+info:
+  version: "0.1.0"
+  title: "cdg"
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/"
+schemes:
+- "http"
+paths:
+  /collection:
+    get:
+      tags:
+      - "collection"
+      summary: "Get collection list"
+      operationId: "getCollection"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "Collections"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/lca_internal_pkg_dto.CollectionDto"
+        "400":
+          description: "Failure response"
+  /collection/{id}:
+    get:
+      tags:
+      - "collection"
+      summary: "Get collection"
+      operationId: "getCollectionId"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Id of the Collection"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "200":
+          description: "Collection"
+          schema:
+            $ref: "#/definitions/lca_internal_pkg_dto.CollectionDto"
+        "400":
+          description: "Failure response"
+  /collection/{id}/archive:
+    get:
+      tags:
+      - "collection"
+      summary: "File"
+      operationId: "getCollectionIdArchive"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/octet-stream"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Id of the Collection"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "200":
+          description: "File contents"
+        "400":
+          description: "Failure response"
+  /version:
+    get:
+      summary: "Get application version"
+      operationId: "getVersion"
+      consumes:
+      - "application/json"
+      produces:
+      - "text/plain"
+      parameters: []
+      responses:
+        "200":
+          description: "Version number"
+definitions:
+  lca_internal_pkg_dto.CollectionDto:
+    type: "object"
+    required:
+    - "error"
+    - "path"
+    - "status"
+    properties:
+      error:
+        type: "string"
+        example: "failed to run"
+      host:
+        type: "string"
+        example: "ne"
+      id:
+        type: "string"
+        example: "0ccd924e-751e-4e1c-b51c-d3956d0cf2a7"
+      password:
+        type: "string"
+        example: "root"
+      path:
+        type: "string"
+        example: "/var/data/123.zip"
+      port:
+        type: "integer"
+        format: "int32"
+        example: 22
+      script:
+        type: "string"
+        example: "/scripts/hello.sh"
+      status:
+        type: "string"
+        example: "started"
+        enum:
+        - "initialized"
+        - "started"
+        - "failure"
+        - "success"
+      user:
+        type: "string"
+        example: "root"
+    example:
+      path: "/var/data/123.zip"
+      password: "root"
+      port: 22
+      host: "ne"
+      id: "0ccd924e-751e-4e1c-b51c-d3956d0cf2a7"
+      error: "failed to run"
+      user: "root"
+      script: "/scripts/hello.sh"
+      status: "started"

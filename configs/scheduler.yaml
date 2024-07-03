@@ -1,0 +1,10 @@
+app:
+  version: "0.1.0"
+  name: scheduler
+  data-path: "./.temp/data"
+http:
+  port: 30010
+rabbitmq:
+  uri: amqp://127.0.0.1:30000
+db:
+  uri: " "

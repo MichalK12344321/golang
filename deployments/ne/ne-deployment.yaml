@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ne-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ne
+  template:
+    metadata:
+      labels:
+        app: ne
+    spec:
+      containers:
+        - name: ne
+          image: lca-ne
+          imagePullPolicy: Never
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "500m"

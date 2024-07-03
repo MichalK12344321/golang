@@ -1,0 +1,85 @@
+---
+swagger: "2.0"
+info:
+  version: "0.1.0"
+  title: "scheduler"
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+basePath: "/"
+schemes:
+- "http"
+paths:
+  /schedule:
+    post:
+      tags:
+      - "schedule"
+      summary: "Schedule log collection"
+      operationId: "postSchedule"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Schedule request"
+        required: true
+        schema:
+          $ref: "#/definitions/lca_internal_pkg_dto.ScheduleRequestDto"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "Collection Id"
+          schema:
+            $ref: "#/definitions/lca_internal_pkg_dto.ScheduleResponseDto"
+        "400":
+          description: "Failure response"
+  /version:
+    get:
+      summary: "Get application version"
+      operationId: "getVersion"
+      consumes:
+      - "application/json"
+      produces:
+      - "text/plain"
+      parameters: []
+      responses:
+        "200":
+          description: "Version number"
+definitions:
+  lca_internal_pkg_dto.ScheduleRequestDto:
+    type: "object"
+    required:
+    - "host"
+    - "password"
+    - "port"
+    - "script"
+    - "user"
+    properties:
+      host:
+        type: "string"
+        example: "ne"
+      password:
+        type: "string"
+        example: "root"
+      port:
+        type: "integer"
+        format: "int32"
+        example: 22
+      script:
+        type: "string"
+        example: "/scripts/hello.sh"
+      user:
+        type: "string"
+        example: "root"
+  lca_internal_pkg_dto.ScheduleResponseDto:
+    type: "object"
+    required:
+    - "id"
+    properties:
+      id:
+        type: "string"
+        example: "a0a73fd7-1161-4b5b-bce7-01907c1353c9"
+    example:
+      id: "a0a73fd7-1161-4b5b-bce7-01907c1353c9"

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: collector
+  template:
+    metadata:
+      labels:
+        app: collector
+    spec:
+      containers:
+        - name: collector
+          image: lca-collector
+          imagePullPolicy: Never
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "500m"
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lca/collector/data
+          env:
+          - name: APP_NAME
+            value: collector
+          - name: APP_VERSION
+            value: "0.1.0"
+          - name: APP_DATA_PATH
+            value: "/var/lca/collector/data"
+          - name: PORT
+            value: "3003"
+          - name: RMQ_URI
+            value: amqp://rabbitmq:5672
+          - name: DB_CONNECTION
+            value: " "
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: file-store-data
