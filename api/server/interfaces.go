@@ -11,3 +11,7 @@ type ServerConfig struct {
 	Name    string
 	Port    int
 }
+
+type ValueObject struct {
+	Value string `json:"value"`
+}

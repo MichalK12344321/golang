@@ -6,15 +6,29 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**GetCollection**](CollectionApi.md#GetCollection) | **Get** /collection | Get collection list
 [**GetCollectionId**](CollectionApi.md#GetCollectionId) | **Get** /collection/{id} | Get collection
-[**GetCollectionIdArchive**](CollectionApi.md#GetCollectionIdArchive) | **Get** /collection/{id}/archive | File
+[**GetCollectionRunRunId**](CollectionApi.md#GetCollectionRunRunId) | **Get** /collection/run/{runId} | Get run details
+[**GetCollectionRunRunIdArchive**](CollectionApi.md#GetCollectionRunRunIdArchive) | **Get** /collection/run/{runId}/archive | File
 
 
 # **GetCollection**
-> []LcaInternalPkgDtoCollectionDto GetCollection(ctx, )
+> []LcaInternalPkgDtoCollectionDto GetCollection(ctx, optional)
 Get collection list
 
 ### Required Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***CollectionApiGetCollectionOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a CollectionApiGetCollectionOpts struct
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **limit** | **optional.Int32**| number of items to retrieve | [default to 5]
+ **cursor** | **optional.String**| paging cursor | 
+ **statuses** | **optional.String**| status filter (comma separated) | 
 
 ### Return type
 
@@ -57,8 +71,34 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **GetCollectionIdArchive**
-> GetCollectionIdArchive(ctx, id)
+# **GetCollectionRunRunId**
+> LcaInternalPkgDtoRunDto GetCollectionRunRunId(ctx, runId)
+Get run details
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **runId** | **string**| Run id | 
+
+### Return type
+
+[**LcaInternalPkgDtoRunDto**](lca_internal_pkg_dto.RunDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **GetCollectionRunRunIdArchive**
+> GetCollectionRunRunIdArchive(ctx, runId)
 File
 
 ### Required Parameters
@@ -66,7 +106,7 @@ File
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **id** | **string**| Id of the Collection | 
+  **runId** | **string**| Run id | 
 
 ### Return type
 

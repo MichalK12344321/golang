@@ -13,6 +13,7 @@ import (
 	"syscall"
 
 	"github.com/defval/di"
+	"github.com/rs/cors"
 	"github.com/zc2638/swag"
 	"github.com/zc2638/swag/option"
 )
@@ -65,10 +66,10 @@ func NewContext() context.Context {
 	return ctx
 }
 
-func NewServer(mux *http.ServeMux, serverConfig *ServerConfig) *http.Server {
+func NewServer(mux *http.ServeMux, serverConfig *ServerConfig, logger logging.Logger) *http.Server {
 	server := &http.Server{
 		Addr:    ":" + strconv.Itoa(serverConfig.Port),
-		Handler: mux,
+		Handler: logRequestHandler(cors.Default().Handler(mux), logger),
 	}
 	return server
 }

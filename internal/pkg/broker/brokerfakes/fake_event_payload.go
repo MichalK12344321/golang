@@ -9,10 +9,11 @@ import (
 )
 
 type FakeEventPayload struct {
-	AcknowledgeStub        func(...error) error
+	AcknowledgeStub        func(bool, bool) error
 	acknowledgeMutex       sync.RWMutex
 	acknowledgeArgsForCall []struct {
-		arg1 []error
+		arg1 bool
+		arg2 bool
 	}
 	acknowledgeReturns struct {
 		result1 error
@@ -46,18 +47,19 @@ type FakeEventPayload struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeEventPayload) Acknowledge(arg1 ...error) error {
+func (fake *FakeEventPayload) Acknowledge(arg1 bool, arg2 bool) error {
 	fake.acknowledgeMutex.Lock()
 	ret, specificReturn := fake.acknowledgeReturnsOnCall[len(fake.acknowledgeArgsForCall)]
 	fake.acknowledgeArgsForCall = append(fake.acknowledgeArgsForCall, struct {
-		arg1 []error
-	}{arg1})
+		arg1 bool
+		arg2 bool
+	}{arg1, arg2})
 	stub := fake.AcknowledgeStub
 	fakeReturns := fake.acknowledgeReturns
-	fake.recordInvocation("Acknowledge", []interface{}{arg1})
+	fake.recordInvocation("Acknowledge", []interface{}{arg1, arg2})
 	fake.acknowledgeMutex.Unlock()
 	if stub != nil {
-		return stub(arg1...)
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
@@ -71,17 +73,17 @@ func (fake *FakeEventPayload) AcknowledgeCallCount() int {
 	return len(fake.acknowledgeArgsForCall)
 }
 
-func (fake *FakeEventPayload) AcknowledgeCalls(stub func(...error) error) {
+func (fake *FakeEventPayload) AcknowledgeCalls(stub func(bool, bool) error) {
 	fake.acknowledgeMutex.Lock()
 	defer fake.acknowledgeMutex.Unlock()
 	fake.AcknowledgeStub = stub
 }
 
-func (fake *FakeEventPayload) AcknowledgeArgsForCall(i int) []error {
+func (fake *FakeEventPayload) AcknowledgeArgsForCall(i int) (bool, bool) {
 	fake.acknowledgeMutex.RLock()
 	defer fake.acknowledgeMutex.RUnlock()
 	argsForCall := fake.acknowledgeArgsForCall[i]
-	return argsForCall.arg1
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeEventPayload) AcknowledgeReturns(result1 error) {

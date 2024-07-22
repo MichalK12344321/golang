@@ -8,7 +8,6 @@ import (
 
 //counterfeiter:generate . Storage
 type Storage interface {
-	CreateFile(id uuid.UUID, stdout string, stderr string) (string, error)
-	GetFile(id uuid.UUID) ([]byte, error)
-	ListFiles(id uuid.UUID) ([]string, error)
+	GetFile(runId uuid.UUID) ([]byte, error)
+	ListFiles(runId uuid.UUID) ([]string, error)
 }

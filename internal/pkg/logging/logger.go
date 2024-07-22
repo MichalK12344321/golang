@@ -71,7 +71,7 @@ func (l *AppLogger) Warningf(message string, v ...any) {
 func (l *AppLogger) Errors(errs ...error) {
 	for _, v := range errs {
 		if v != nil {
-			l.Error("%s", errs)
+			l.Error("%s", v)
 		}
 	}
 }

@@ -9,6 +9,8 @@ manifests:
     - ./deployments/services/scheduler/*
     - ./deployments/services/cdg/*
     - ./deployments/services/collector/*
+    - ./deployments/services/web/*
+    - ./deployments/services/front/*
 build:
   tagPolicy:
     sha256: {}
@@ -30,6 +32,16 @@ build:
       docker:
         noCache: true
         dockerfile: ./deployments/services/collector/Dockerfile
+    - image: lca-web
+      context: .
+      docker:
+        noCache: true
+        dockerfile: ./deployments/services/web/Dockerfile
+    - image: lca-front
+      context: .
+      docker:
+        noCache: true
+        dockerfile: ./deployments/services/front/Dockerfile
     - image: lca-ne
       context: ./deployments/ne
       docker:

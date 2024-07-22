@@ -1,0 +1,299 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.1.0",
+    "title": "cdg",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/collection": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Get collection list",
+        "operationId": "getCollection",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "number of items to retrieve",
+            "required": false,
+            "type": "integer",
+            "default": "5"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "description": "paging cursor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "statuses",
+            "description": "status filter (comma separated)",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Collections",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/lca_internal_pkg_dto.CollectionDto"
+              }
+            }
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/collection/run/{runId}": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Get run details",
+        "operationId": "getCollectionRunRunId",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "Run id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Run",
+            "schema": {
+              "$ref": "#/definitions/lca_internal_pkg_dto.RunDto"
+            }
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/collection/run/{runId}/archive": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "File",
+        "operationId": "getCollectionRunRunIdArchive",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "Run id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File contents"
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/collection/{id}": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Get collection",
+        "operationId": "getCollectionId",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Id of the Collection",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Collection",
+            "schema": {
+              "$ref": "#/definitions/lca_internal_pkg_dto.CollectionDto"
+            }
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "summary": "Get application status",
+        "operationId": "getHealthz",
+        "produces": [
+          "text/plain"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/lca_api_server.ValueObject"
+            }
+          }
+        }
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "Get application version",
+        "operationId": "getVersion",
+        "produces": [
+          "text/plain"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Version number",
+            "schema": {
+              "$ref": "#/definitions/lca_api_server.ValueObject"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "lca_api_server.ValueObject": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "lca_internal_pkg_dto.CollectionDto": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "type": "string"
+        },
+        "go": {
+          "$ref": "#/definitions/lca_internal_pkg_events.GoInfo"
+        },
+        "runs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/lca_internal_pkg_dto.RunDto"
+          }
+        },
+        "ssh": {
+          "$ref": "#/definitions/lca_internal_pkg_events.SSHInfo"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "lca_internal_pkg_dto.RunDto": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "runId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "lca_internal_pkg_events.GoInfo": {
+      "type": "object",
+      "properties": {
+        "script": {
+          "type": "string"
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "lca_internal_pkg_events.SSHInfo": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "script": {
+          "type": "string"
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "user": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

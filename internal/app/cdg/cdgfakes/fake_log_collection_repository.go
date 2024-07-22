@@ -23,10 +23,10 @@ type FakeLogCollectionRepository struct {
 		result1 *dto.CollectionDto
 		result2 error
 	}
-	GetManyStub        func(dto.GetCollectionFilterDto) ([]*dto.CollectionDto, error)
+	GetManyStub        func(*dto.GetCollectionFilterDto) ([]*dto.CollectionDto, error)
 	getManyMutex       sync.RWMutex
 	getManyArgsForCall []struct {
-		arg1 dto.GetCollectionFilterDto
+		arg1 *dto.GetCollectionFilterDto
 	}
 	getManyReturns struct {
 		result1 []*dto.CollectionDto
@@ -34,6 +34,19 @@ type FakeLogCollectionRepository struct {
 	}
 	getManyReturnsOnCall map[int]struct {
 		result1 []*dto.CollectionDto
+		result2 error
+	}
+	GetRunStub        func(uuid.UUID) (*dto.RunDto, error)
+	getRunMutex       sync.RWMutex
+	getRunArgsForCall []struct {
+		arg1 uuid.UUID
+	}
+	getRunReturns struct {
+		result1 *dto.RunDto
+		result2 error
+	}
+	getRunReturnsOnCall map[int]struct {
+		result1 *dto.RunDto
 		result2 error
 	}
 	InsertStub        func(*dto.CollectionDto) error
@@ -47,10 +60,10 @@ type FakeLogCollectionRepository struct {
 	insertReturnsOnCall map[int]struct {
 		result1 error
 	}
-	UpdateStub        func(*dto.CollectionDto) error
+	UpdateStub        func(*dto.RunDto) error
 	updateMutex       sync.RWMutex
 	updateArgsForCall []struct {
-		arg1 *dto.CollectionDto
+		arg1 *dto.RunDto
 	}
 	updateReturns struct {
 		result1 error
@@ -126,11 +139,11 @@ func (fake *FakeLogCollectionRepository) GetReturnsOnCall(i int, result1 *dto.Co
 	}{result1, result2}
 }
 
-func (fake *FakeLogCollectionRepository) GetMany(arg1 dto.GetCollectionFilterDto) ([]*dto.CollectionDto, error) {
+func (fake *FakeLogCollectionRepository) GetMany(arg1 *dto.GetCollectionFilterDto) ([]*dto.CollectionDto, error) {
 	fake.getManyMutex.Lock()
 	ret, specificReturn := fake.getManyReturnsOnCall[len(fake.getManyArgsForCall)]
 	fake.getManyArgsForCall = append(fake.getManyArgsForCall, struct {
-		arg1 dto.GetCollectionFilterDto
+		arg1 *dto.GetCollectionFilterDto
 	}{arg1})
 	stub := fake.GetManyStub
 	fakeReturns := fake.getManyReturns
@@ -151,13 +164,13 @@ func (fake *FakeLogCollectionRepository) GetManyCallCount() int {
 	return len(fake.getManyArgsForCall)
 }
 
-func (fake *FakeLogCollectionRepository) GetManyCalls(stub func(dto.GetCollectionFilterDto) ([]*dto.CollectionDto, error)) {
+func (fake *FakeLogCollectionRepository) GetManyCalls(stub func(*dto.GetCollectionFilterDto) ([]*dto.CollectionDto, error)) {
 	fake.getManyMutex.Lock()
 	defer fake.getManyMutex.Unlock()
 	fake.GetManyStub = stub
 }
 
-func (fake *FakeLogCollectionRepository) GetManyArgsForCall(i int) dto.GetCollectionFilterDto {
+func (fake *FakeLogCollectionRepository) GetManyArgsForCall(i int) *dto.GetCollectionFilterDto {
 	fake.getManyMutex.RLock()
 	defer fake.getManyMutex.RUnlock()
 	argsForCall := fake.getManyArgsForCall[i]
@@ -186,6 +199,70 @@ func (fake *FakeLogCollectionRepository) GetManyReturnsOnCall(i int, result1 []*
 	}
 	fake.getManyReturnsOnCall[i] = struct {
 		result1 []*dto.CollectionDto
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeLogCollectionRepository) GetRun(arg1 uuid.UUID) (*dto.RunDto, error) {
+	fake.getRunMutex.Lock()
+	ret, specificReturn := fake.getRunReturnsOnCall[len(fake.getRunArgsForCall)]
+	fake.getRunArgsForCall = append(fake.getRunArgsForCall, struct {
+		arg1 uuid.UUID
+	}{arg1})
+	stub := fake.GetRunStub
+	fakeReturns := fake.getRunReturns
+	fake.recordInvocation("GetRun", []interface{}{arg1})
+	fake.getRunMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeLogCollectionRepository) GetRunCallCount() int {
+	fake.getRunMutex.RLock()
+	defer fake.getRunMutex.RUnlock()
+	return len(fake.getRunArgsForCall)
+}
+
+func (fake *FakeLogCollectionRepository) GetRunCalls(stub func(uuid.UUID) (*dto.RunDto, error)) {
+	fake.getRunMutex.Lock()
+	defer fake.getRunMutex.Unlock()
+	fake.GetRunStub = stub
+}
+
+func (fake *FakeLogCollectionRepository) GetRunArgsForCall(i int) uuid.UUID {
+	fake.getRunMutex.RLock()
+	defer fake.getRunMutex.RUnlock()
+	argsForCall := fake.getRunArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeLogCollectionRepository) GetRunReturns(result1 *dto.RunDto, result2 error) {
+	fake.getRunMutex.Lock()
+	defer fake.getRunMutex.Unlock()
+	fake.GetRunStub = nil
+	fake.getRunReturns = struct {
+		result1 *dto.RunDto
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeLogCollectionRepository) GetRunReturnsOnCall(i int, result1 *dto.RunDto, result2 error) {
+	fake.getRunMutex.Lock()
+	defer fake.getRunMutex.Unlock()
+	fake.GetRunStub = nil
+	if fake.getRunReturnsOnCall == nil {
+		fake.getRunReturnsOnCall = make(map[int]struct {
+			result1 *dto.RunDto
+			result2 error
+		})
+	}
+	fake.getRunReturnsOnCall[i] = struct {
+		result1 *dto.RunDto
 		result2 error
 	}{result1, result2}
 }
@@ -251,11 +328,11 @@ func (fake *FakeLogCollectionRepository) InsertReturnsOnCall(i int, result1 erro
 	}{result1}
 }
 
-func (fake *FakeLogCollectionRepository) Update(arg1 *dto.CollectionDto) error {
+func (fake *FakeLogCollectionRepository) Update(arg1 *dto.RunDto) error {
 	fake.updateMutex.Lock()
 	ret, specificReturn := fake.updateReturnsOnCall[len(fake.updateArgsForCall)]
 	fake.updateArgsForCall = append(fake.updateArgsForCall, struct {
-		arg1 *dto.CollectionDto
+		arg1 *dto.RunDto
 	}{arg1})
 	stub := fake.UpdateStub
 	fakeReturns := fake.updateReturns
@@ -276,13 +353,13 @@ func (fake *FakeLogCollectionRepository) UpdateCallCount() int {
 	return len(fake.updateArgsForCall)
 }
 
-func (fake *FakeLogCollectionRepository) UpdateCalls(stub func(*dto.CollectionDto) error) {
+func (fake *FakeLogCollectionRepository) UpdateCalls(stub func(*dto.RunDto) error) {
 	fake.updateMutex.Lock()
 	defer fake.updateMutex.Unlock()
 	fake.UpdateStub = stub
 }
 
-func (fake *FakeLogCollectionRepository) UpdateArgsForCall(i int) *dto.CollectionDto {
+func (fake *FakeLogCollectionRepository) UpdateArgsForCall(i int) *dto.RunDto {
 	fake.updateMutex.RLock()
 	defer fake.updateMutex.RUnlock()
 	argsForCall := fake.updateArgsForCall[i]
@@ -319,6 +396,8 @@ func (fake *FakeLogCollectionRepository) Invocations() map[string][][]interface{
 	defer fake.getMutex.RUnlock()
 	fake.getManyMutex.RLock()
 	defer fake.getManyMutex.RUnlock()
+	fake.getRunMutex.RLock()
+	defer fake.getRunMutex.RUnlock()
 	fake.insertMutex.RLock()
 	defer fake.insertMutex.RUnlock()
 	fake.updateMutex.RLock()

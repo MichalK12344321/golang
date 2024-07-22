@@ -1,0 +1,1 @@
+docker run --rm -v $PWD:/src -v $PWD/../../../../cmd/scheduler/:/definitions/ swaggerapi/swagger-codegen-cli:2.4.41 generate -l go -i /definitions/swagger.json -o /src/go_client -c /src/config.json

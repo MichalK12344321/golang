@@ -1,0 +1,10 @@
+app:
+  version: "0.1.0"
+  name: web
+  data-path: " "
+http:
+  port: 30040
+rabbitmq:
+  uri: amqp://192.168.49.2:30000
+db:
+  uri: " "

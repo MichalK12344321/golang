@@ -7,16 +7,24 @@ import (
 	"github.com/wagslane/go-rabbitmq"
 )
 
-type PublisherConfig struct {
-	Exchange   string
-	RoutingKey string
-}
-
-type SubscribeConfig struct {
+type QueueConfig struct {
 	Exchange   string
 	Queue      string
 	RoutingKey string
-	Job        func(<-chan EventPayload)
+}
+
+type PublisherConfig struct {
+	Exchange   string
+	RoutingKey string
+	Headers    map[string]any
+}
+
+type SubscribeConfig struct {
+	Exchange    string
+	Queue       string
+	RoutingKeys []string
+	Args        map[string]any
+	Job         func(<-chan EventPayload)
 }
 
 type BrokerConfig struct {
@@ -55,7 +63,7 @@ type ParseBodyFn func(target any, bytes []byte, objType string) error
 type EventPayload interface {
 	Get() *rabbitmq.Delivery
 	ParseBody(any, ParseBodyFn) error
-	Acknowledge(err ...error) error
+	Acknowledge(nack bool, requeue bool) error
 }
 
 //counterfeiter:generate . BrokerConnection

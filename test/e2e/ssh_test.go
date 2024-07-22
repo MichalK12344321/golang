@@ -2,9 +2,8 @@ package e2e_test
 
 import (
 	"context"
-	"lca/internal/pkg/logging"
+	"lca/internal/app/collector"
 	"lca/internal/pkg/ssh"
-	"lca/internal/pkg/ssh/sshfakes"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,24 +11,32 @@ import (
 
 func TestRunCommand(t *testing.T) {
 	assert := assert.New(t)
-
-	var c ssh.SSH = ssh.NewSSHClient()
-
-	opts := &sshfakes.FakeSSHOptions{}
-	opts.GetAddressReturns("localhost:30022")
-	opts.GetCredentialsReturns("root", "root")
+	c := ssh.NewSSHClient()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	c.Connect(opts)
-
-	command := "ls -la"
-
-	stdOut, stdErr, err := c.Run(ctx, command)
+	err := c.Connect(SSH_OPTIONS)
 	assert.Nil(err)
-	assert.Empty(stdErr)
-	assert.NotEmpty(stdOut)
 
-	logging.GetLogger().Debug("%s", stdOut)
+	command := "pwd"
+
+	runData := collector.NewCollectionJobData()
+
+	go func() {
+		c.Run(ctx, command, runData)
+	}()
+
+	for {
+		select {
+		case line := <-runData.StdoutChannel():
+			assert.Equal("/root", line)
+		case line := <-runData.StderrChannel():
+			assert.Empty(line)
+		case err := <-runData.ErrorChannel():
+			assert.Nil(err)
+		case <-runData.DoneChannel():
+			return
+		}
+	}
 }

@@ -15,3 +15,11 @@ vendor/
 **/*.exe
 tmp
 .vscode
+
+**/*/Dockerfile
+**/*/.dockerignore
+**/*/node_modules
+**/*/npm-debug.log
+**/*/dist
+**/*/logs
+**/*/.vscode

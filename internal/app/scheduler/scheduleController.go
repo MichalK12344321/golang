@@ -1,11 +1,8 @@
 package scheduler
 
 import (
-	"io/ioutil"
 	"lca/api/server"
-	"lca/internal/config"
 	"lca/internal/pkg/dto"
-	"lca/internal/pkg/util"
 	"net/http"
 
 	"github.com/zc2638/swag"
@@ -14,45 +11,77 @@ import (
 
 type SchedulerController struct {
 	server.ControllerBase
-	config    *config.Config
-	publisher *CollectionRequestPublisher
+	scheduler *Scheduler
 }
 
-func NewSchedulerController(config *config.Config, publisher *CollectionRequestPublisher) *SchedulerController {
-	return &SchedulerController{config: config, publisher: publisher}
+func NewSchedulerController(s *Scheduler) *SchedulerController {
+	return &SchedulerController{scheduler: s}
 }
 
 func (c *SchedulerController) GetEndpoints() []*swag.Endpoint {
 	return []*swag.Endpoint{
 		endpoint.New(
 			http.MethodPost,
-			"/schedule",
-			endpoint.Handler(c.Post),
-			endpoint.Body(dto.ScheduleRequestDto{}, "Schedule request", true),
-			endpoint.Summary("Schedule log collection"),
-			endpoint.Response(http.StatusOK, "Collection Id", endpoint.SchemaResponseOption(dto.ScheduleResponseDto{})),
+			"/schedule/ssh",
+			endpoint.Handler(c.ScheduleSSh),
+			endpoint.Body(dto.ScheduleSSHCollectionDto{}, "Request", true),
+			endpoint.Summary("Schedule SSH collection"),
+			endpoint.Response(http.StatusOK, "Response", endpoint.SchemaResponseOption(dto.ScheduleResponseDto{})),
 			endpoint.Tags("schedule"),
 			endpoint.Produces("application/json"),
+			endpoint.Consumes("application/json"),
+			endpoint.Response(http.StatusBadRequest, "Failure response"),
+		),
+		endpoint.New(
+			http.MethodPost,
+			"/schedule/go",
+			endpoint.Handler(c.ScheduleGo),
+			endpoint.Body(dto.ScheduleGoCollectionDto{}, "Request", true),
+			endpoint.Summary("Schedule Go collection"),
+			endpoint.Response(http.StatusOK, "Response", endpoint.SchemaResponseOption(dto.ScheduleResponseDto{})),
+			endpoint.Tags("schedule"),
+			endpoint.Produces("application/json"),
+			endpoint.Consumes("application/json"),
+			endpoint.Response(http.StatusBadRequest, "Failure response"),
+		),
+		endpoint.New(
+			http.MethodPost,
+			"/terminate",
+			endpoint.Handler(c.Terminate),
+			endpoint.Body(dto.TerminateRequestDto{}, "Terminate request", true),
+			endpoint.Summary("Terminate log collection"),
+			endpoint.Response(http.StatusOK, "Response", endpoint.SchemaResponseOption(dto.TerminateResponseDto{})),
+			endpoint.Tags("schedule"),
+			endpoint.Produces("application/json"),
+			endpoint.Consumes("application/json"),
 			endpoint.Response(http.StatusBadRequest, "Failure response"),
 		),
 	}
 }
 
-func (c *SchedulerController) Post(writer http.ResponseWriter, r *http.Request) {
-	bodyBytes, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		c.WriteResponse(writer, "Error reading request body", err, "application/json")
+func (c *SchedulerController) ScheduleSSh(writer http.ResponseWriter, request *http.Request) {
+	schedule := &dto.ScheduleSSHCollectionDto{}
+	if c.ParseBody(writer, request, schedule) != nil {
 		return
 	}
-	defer r.Body.Close()
+	result, err := c.scheduler.ScheduleSSH(schedule)
+	c.WriteResponse(writer, result, err, "application/json")
+}
 
-	schedule := &dto.ScheduleRequestDto{}
-	err = util.FromJson(schedule, bodyBytes)
-	if err != nil {
-		c.WriteResponse(writer, "Error parsing body", err, "application/json")
+func (c *SchedulerController) ScheduleGo(writer http.ResponseWriter, request *http.Request) {
+	schedule := &dto.ScheduleGoCollectionDto{}
+	if c.ParseBody(writer, request, schedule) != nil {
 		return
 	}
-	scheduleEvent := schedule.ToEvent()
-	err = c.publisher.Publish(scheduleEvent)
-	c.WriteResponse(writer, &dto.ScheduleResponseDto{Id: scheduleEvent.Id}, err, "application/json")
+	result, err := c.scheduler.ScheduleGo(schedule)
+	c.WriteResponse(writer, result, err, "application/json")
+}
+
+func (c *SchedulerController) Terminate(writer http.ResponseWriter, request *http.Request) {
+	terminate := &dto.TerminateRequestDto{}
+	if c.ParseBody(writer, request, terminate) != nil {
+		return
+	}
+	err := c.scheduler.Terminate(*terminate)
+	c.WriteResponse(writer, &dto.TerminateResponseDto{}, err, "application/json")
 }

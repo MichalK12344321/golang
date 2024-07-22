@@ -19,31 +19,12 @@ type FakeSSH struct {
 	connectReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DisconnectStub        func() error
-	disconnectMutex       sync.RWMutex
-	disconnectArgsForCall []struct {
-	}
-	disconnectReturns struct {
-		result1 error
-	}
-	disconnectReturnsOnCall map[int]struct {
-		result1 error
-	}
-	RunStub        func(context.Context, string) (string, string, error)
+	RunStub        func(context.Context, string, ssh.SSHRunData)
 	runMutex       sync.RWMutex
 	runArgsForCall []struct {
 		arg1 context.Context
 		arg2 string
-	}
-	runReturns struct {
-		result1 string
-		result2 string
-		result3 error
-	}
-	runReturnsOnCall map[int]struct {
-		result1 string
-		result2 string
-		result3 error
+		arg3 ssh.SSHRunData
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
@@ -110,77 +91,19 @@ func (fake *FakeSSH) ConnectReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
-func (fake *FakeSSH) Disconnect() error {
-	fake.disconnectMutex.Lock()
-	ret, specificReturn := fake.disconnectReturnsOnCall[len(fake.disconnectArgsForCall)]
-	fake.disconnectArgsForCall = append(fake.disconnectArgsForCall, struct {
-	}{})
-	stub := fake.DisconnectStub
-	fakeReturns := fake.disconnectReturns
-	fake.recordInvocation("Disconnect", []interface{}{})
-	fake.disconnectMutex.Unlock()
-	if stub != nil {
-		return stub()
-	}
-	if specificReturn {
-		return ret.result1
-	}
-	return fakeReturns.result1
-}
-
-func (fake *FakeSSH) DisconnectCallCount() int {
-	fake.disconnectMutex.RLock()
-	defer fake.disconnectMutex.RUnlock()
-	return len(fake.disconnectArgsForCall)
-}
-
-func (fake *FakeSSH) DisconnectCalls(stub func() error) {
-	fake.disconnectMutex.Lock()
-	defer fake.disconnectMutex.Unlock()
-	fake.DisconnectStub = stub
-}
-
-func (fake *FakeSSH) DisconnectReturns(result1 error) {
-	fake.disconnectMutex.Lock()
-	defer fake.disconnectMutex.Unlock()
-	fake.DisconnectStub = nil
-	fake.disconnectReturns = struct {
-		result1 error
-	}{result1}
-}
-
-func (fake *FakeSSH) DisconnectReturnsOnCall(i int, result1 error) {
-	fake.disconnectMutex.Lock()
-	defer fake.disconnectMutex.Unlock()
-	fake.DisconnectStub = nil
-	if fake.disconnectReturnsOnCall == nil {
-		fake.disconnectReturnsOnCall = make(map[int]struct {
-			result1 error
-		})
-	}
-	fake.disconnectReturnsOnCall[i] = struct {
-		result1 error
-	}{result1}
-}
-
-func (fake *FakeSSH) Run(arg1 context.Context, arg2 string) (string, string, error) {
+func (fake *FakeSSH) Run(arg1 context.Context, arg2 string, arg3 ssh.SSHRunData) {
 	fake.runMutex.Lock()
-	ret, specificReturn := fake.runReturnsOnCall[len(fake.runArgsForCall)]
 	fake.runArgsForCall = append(fake.runArgsForCall, struct {
 		arg1 context.Context
 		arg2 string
-	}{arg1, arg2})
+		arg3 ssh.SSHRunData
+	}{arg1, arg2, arg3})
 	stub := fake.RunStub
-	fakeReturns := fake.runReturns
-	fake.recordInvocation("Run", []interface{}{arg1, arg2})
+	fake.recordInvocation("Run", []interface{}{arg1, arg2, arg3})
 	fake.runMutex.Unlock()
 	if stub != nil {
-		return stub(arg1, arg2)
+		fake.RunStub(arg1, arg2, arg3)
 	}
-	if specificReturn {
-		return ret.result1, ret.result2, ret.result3
-	}
-	return fakeReturns.result1, fakeReturns.result2, fakeReturns.result3
 }
 
 func (fake *FakeSSH) RunCallCount() int {
@@ -189,46 +112,17 @@ func (fake *FakeSSH) RunCallCount() int {
 	return len(fake.runArgsForCall)
 }
 
-func (fake *FakeSSH) RunCalls(stub func(context.Context, string) (string, string, error)) {
+func (fake *FakeSSH) RunCalls(stub func(context.Context, string, ssh.SSHRunData)) {
 	fake.runMutex.Lock()
 	defer fake.runMutex.Unlock()
 	fake.RunStub = stub
 }
 
-func (fake *FakeSSH) RunArgsForCall(i int) (context.Context, string) {
+func (fake *FakeSSH) RunArgsForCall(i int) (context.Context, string, ssh.SSHRunData) {
 	fake.runMutex.RLock()
 	defer fake.runMutex.RUnlock()
 	argsForCall := fake.runArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2
-}
-
-func (fake *FakeSSH) RunReturns(result1 string, result2 string, result3 error) {
-	fake.runMutex.Lock()
-	defer fake.runMutex.Unlock()
-	fake.RunStub = nil
-	fake.runReturns = struct {
-		result1 string
-		result2 string
-		result3 error
-	}{result1, result2, result3}
-}
-
-func (fake *FakeSSH) RunReturnsOnCall(i int, result1 string, result2 string, result3 error) {
-	fake.runMutex.Lock()
-	defer fake.runMutex.Unlock()
-	fake.RunStub = nil
-	if fake.runReturnsOnCall == nil {
-		fake.runReturnsOnCall = make(map[int]struct {
-			result1 string
-			result2 string
-			result3 error
-		})
-	}
-	fake.runReturnsOnCall[i] = struct {
-		result1 string
-		result2 string
-		result3 error
-	}{result1, result2, result3}
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
 }
 
 func (fake *FakeSSH) Invocations() map[string][][]interface{} {
@@ -236,8 +130,6 @@ func (fake *FakeSSH) Invocations() map[string][][]interface{} {
 	defer fake.invocationsMutex.RUnlock()
 	fake.connectMutex.RLock()
 	defer fake.connectMutex.RUnlock()
-	fake.disconnectMutex.RLock()
-	defer fake.disconnectMutex.RUnlock()
 	fake.runMutex.RLock()
 	defer fake.runMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}

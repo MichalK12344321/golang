@@ -9,21 +9,6 @@ import (
 )
 
 type FakeStorage struct {
-	CreateFileStub        func(uuid.UUID, string, string) (string, error)
-	createFileMutex       sync.RWMutex
-	createFileArgsForCall []struct {
-		arg1 uuid.UUID
-		arg2 string
-		arg3 string
-	}
-	createFileReturns struct {
-		result1 string
-		result2 error
-	}
-	createFileReturnsOnCall map[int]struct {
-		result1 string
-		result2 error
-	}
 	GetFileStub        func(uuid.UUID) ([]byte, error)
 	getFileMutex       sync.RWMutex
 	getFileArgsForCall []struct {
@@ -52,72 +37,6 @@ type FakeStorage struct {
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
-}
-
-func (fake *FakeStorage) CreateFile(arg1 uuid.UUID, arg2 string, arg3 string) (string, error) {
-	fake.createFileMutex.Lock()
-	ret, specificReturn := fake.createFileReturnsOnCall[len(fake.createFileArgsForCall)]
-	fake.createFileArgsForCall = append(fake.createFileArgsForCall, struct {
-		arg1 uuid.UUID
-		arg2 string
-		arg3 string
-	}{arg1, arg2, arg3})
-	stub := fake.CreateFileStub
-	fakeReturns := fake.createFileReturns
-	fake.recordInvocation("CreateFile", []interface{}{arg1, arg2, arg3})
-	fake.createFileMutex.Unlock()
-	if stub != nil {
-		return stub(arg1, arg2, arg3)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fakeReturns.result1, fakeReturns.result2
-}
-
-func (fake *FakeStorage) CreateFileCallCount() int {
-	fake.createFileMutex.RLock()
-	defer fake.createFileMutex.RUnlock()
-	return len(fake.createFileArgsForCall)
-}
-
-func (fake *FakeStorage) CreateFileCalls(stub func(uuid.UUID, string, string) (string, error)) {
-	fake.createFileMutex.Lock()
-	defer fake.createFileMutex.Unlock()
-	fake.CreateFileStub = stub
-}
-
-func (fake *FakeStorage) CreateFileArgsForCall(i int) (uuid.UUID, string, string) {
-	fake.createFileMutex.RLock()
-	defer fake.createFileMutex.RUnlock()
-	argsForCall := fake.createFileArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
-}
-
-func (fake *FakeStorage) CreateFileReturns(result1 string, result2 error) {
-	fake.createFileMutex.Lock()
-	defer fake.createFileMutex.Unlock()
-	fake.CreateFileStub = nil
-	fake.createFileReturns = struct {
-		result1 string
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeStorage) CreateFileReturnsOnCall(i int, result1 string, result2 error) {
-	fake.createFileMutex.Lock()
-	defer fake.createFileMutex.Unlock()
-	fake.CreateFileStub = nil
-	if fake.createFileReturnsOnCall == nil {
-		fake.createFileReturnsOnCall = make(map[int]struct {
-			result1 string
-			result2 error
-		})
-	}
-	fake.createFileReturnsOnCall[i] = struct {
-		result1 string
-		result2 error
-	}{result1, result2}
 }
 
 func (fake *FakeStorage) GetFile(arg1 uuid.UUID) ([]byte, error) {
@@ -251,8 +170,6 @@ func (fake *FakeStorage) ListFilesReturnsOnCall(i int, result1 []string, result2
 func (fake *FakeStorage) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
-	fake.createFileMutex.RLock()
-	defer fake.createFileMutex.RUnlock()
 	fake.getFileMutex.RLock()
 	defer fake.getFileMutex.RUnlock()
 	fake.listFilesMutex.RLock()

@@ -21,14 +21,23 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*DefaultApi* | [**GetHealthz**](docs/DefaultApi.md#gethealthz) | **Get** /healthz | Get application status
 *DefaultApi* | [**GetVersion**](docs/DefaultApi.md#getversion) | **Get** /version | Get application version
-*ScheduleApi* | [**PostSchedule**](docs/ScheduleApi.md#postschedule) | **Post** /schedule | Schedule log collection
+*ScheduleApi* | [**PostScheduleGo**](docs/ScheduleApi.md#postschedulego) | **Post** /schedule/go | Schedule Go collection
+*ScheduleApi* | [**PostScheduleSsh**](docs/ScheduleApi.md#postschedulessh) | **Post** /schedule/ssh | Schedule SSH collection
+*ScheduleApi* | [**PostTerminate**](docs/ScheduleApi.md#postterminate) | **Post** /terminate | Terminate log collection
 
 
 ## Documentation For Models
 
- - [LcaInternalPkgDtoScheduleRequestDto](docs/LcaInternalPkgDtoScheduleRequestDto.md)
+ - [LcaApiServerValueObject](docs/LcaApiServerValueObject.md)
+ - [LcaInternalPkgDtoRunScheduleDto](docs/LcaInternalPkgDtoRunScheduleDto.md)
+ - [LcaInternalPkgDtoScheduleGoCollectionDto](docs/LcaInternalPkgDtoScheduleGoCollectionDto.md)
  - [LcaInternalPkgDtoScheduleResponseDto](docs/LcaInternalPkgDtoScheduleResponseDto.md)
+ - [LcaInternalPkgDtoScheduleSshCollectionDto](docs/LcaInternalPkgDtoScheduleSshCollectionDto.md)
+ - [LcaInternalPkgDtoTargetDto](docs/LcaInternalPkgDtoTargetDto.md)
+ - [LcaInternalPkgDtoTerminateRequestDto](docs/LcaInternalPkgDtoTerminateRequestDto.md)
+ - [LcaInternalPkgDtoTerminateResponseDto](docs/LcaInternalPkgDtoTerminateResponseDto.md)
 
 
 ## Documentation For Authorization

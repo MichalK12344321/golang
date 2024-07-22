@@ -4,48 +4,100 @@ import (
 	"encoding/json"
 	"fmt"
 	"lca/internal/pkg/util"
+	"time"
 
 	"github.com/google/uuid"
 )
 
-type SSHCredentials struct {
-	User     string `json:"user" required:"" example:"root"`
-	Password string `json:"password" required:"" example:"root"`
+type AppendLineEvent struct {
+	RunId uuid.UUID `json:"runId,string"`
+	File  string    `json:"file"`
+	Line  string    `json:"line"`
 }
 
-type CollectionScheduleEvent struct {
-	Id     uuid.UUID `json:"id,string" required:"" example:"0ccd924e-751e-4e1c-b51c-d3956d0cf2a7"`
-	Host   string    `json:"host" required:"" example:"ne"`
-	Port   int       `json:"port" required:"" example:"22"`
-	Script string    `json:"script" required:"" example:"/scripts/hello.sh"`
-	SSHCredentials
+type SSHInfo struct {
+	User     string        `json:"user"`
+	Password string        `json:"password"`
+	Host     string        `json:"host"`
+	Port     int           `json:"port"`
+	Script   string        `json:"script"`
+	Timeout  time.Duration `json:"timeout"`
 }
 
-type CollectionJobUpdatedEvent struct {
-	CollectionScheduleEvent
-	Status CollectionStatus `json:"status" enum:"initialized,started,failure,success" required:"" example:"started"`
-	Error  string           `json:"error" required:"" example:"failed to run"`
-	Path   string           `json:"path" required:"" example:"/var/data/123.zip"`
+type GoInfo struct {
+	Script  string        `json:"script"`
+	Timeout time.Duration `json:"timeout"`
 }
+
+type CollectionCreateEvent struct {
+	CollectionId uuid.UUID      `json:"collectionId,string"`
+	Type         CollectionType `json:"type"`
+	SSH          *SSHInfo       `json:"ssh"`
+	Go           *GoInfo        `json:"go"`
+}
+
+type RunCreateEvent struct {
+	RunId        uuid.UUID `json:"runId,string"`
+	CollectionId uuid.UUID `json:"collectionId,string"`
+}
+
+type RunUpdateEvent struct {
+	RunCreateEvent
+	Status CollectionStatus `json:"status"`
+	Error  string           `json:"error"`
+}
+
+type RunTerminateEvent struct {
+	RunId uuid.UUID `json:"runId,string"`
+}
+
+type CollectionType string
+
+const CollectionTypeSSH CollectionType = "ssh"
+const CollectionTypeGO CollectionType = "go"
 
 type CollectionStatus string
 
-const CollectionStatusInitialized CollectionStatus = "initialized"
+const CollectionStatusCreated CollectionStatus = "created"
 const CollectionStatusStarted CollectionStatus = "started"
 const CollectionStatusFailure CollectionStatus = "failure"
 const CollectionStatusSuccess CollectionStatus = "success"
+const CollectionStatusTerminating CollectionStatus = "terminating"
+const CollectionStatusTerminated CollectionStatus = "terminated"
 
 func FromJson(event any, body []byte, eventType string) error {
-	if eventType != util.GetSimpleName(event) {
-		return fmt.Errorf("provided struct %s does not match event type %s", event, eventType)
+	eventTargetType := util.GetSimpleName(event)
+	if eventType != eventTargetType {
+		return fmt.Errorf(
+			"provided struct %s (%s) does not match event type %s",
+			event,
+			eventTargetType,
+			eventType,
+		)
 	}
 	return json.Unmarshal(body, event)
 }
 
-func (e *CollectionScheduleEvent) GetCredentials() (string, string) {
+func (e *SSHInfo) GetCredentials() (string, string) {
 	return e.User, e.Password
 }
 
-func (e *CollectionScheduleEvent) GetAddress() string {
+func (e *SSHInfo) GetAddress() string {
 	return fmt.Sprintf("%s:%d", e.Host, e.Port)
+}
+
+func (e *SSHInfo) GetTimeout() time.Duration {
+	return e.Timeout
+}
+
+func (e *SSHInfo) GetCommand() string {
+	return e.Script
+}
+
+func (c *CollectionCreateEvent) GetTimeout() time.Duration {
+	if c.Type == CollectionTypeSSH {
+		return c.SSH.Timeout
+	}
+
+	return c.Go.Timeout
 }

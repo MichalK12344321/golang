@@ -4,6 +4,7 @@ package sshfakes
 import (
 	"lca/internal/pkg/ssh"
 	"sync"
+	"time"
 )
 
 type FakeSSHOptions struct {
@@ -17,6 +18,16 @@ type FakeSSHOptions struct {
 	getAddressReturnsOnCall map[int]struct {
 		result1 string
 	}
+	GetCommandStub        func() string
+	getCommandMutex       sync.RWMutex
+	getCommandArgsForCall []struct {
+	}
+	getCommandReturns struct {
+		result1 string
+	}
+	getCommandReturnsOnCall map[int]struct {
+		result1 string
+	}
 	GetCredentialsStub        func() (string, string)
 	getCredentialsMutex       sync.RWMutex
 	getCredentialsArgsForCall []struct {
@@ -28,6 +39,16 @@ type FakeSSHOptions struct {
 	getCredentialsReturnsOnCall map[int]struct {
 		result1 string
 		result2 string
+	}
+	GetTimeoutStub        func() time.Duration
+	getTimeoutMutex       sync.RWMutex
+	getTimeoutArgsForCall []struct {
+	}
+	getTimeoutReturns struct {
+		result1 time.Duration
+	}
+	getTimeoutReturnsOnCall map[int]struct {
+		result1 time.Duration
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
@@ -82,6 +103,59 @@ func (fake *FakeSSHOptions) GetAddressReturnsOnCall(i int, result1 string) {
 		})
 	}
 	fake.getAddressReturnsOnCall[i] = struct {
+		result1 string
+	}{result1}
+}
+
+func (fake *FakeSSHOptions) GetCommand() string {
+	fake.getCommandMutex.Lock()
+	ret, specificReturn := fake.getCommandReturnsOnCall[len(fake.getCommandArgsForCall)]
+	fake.getCommandArgsForCall = append(fake.getCommandArgsForCall, struct {
+	}{})
+	stub := fake.GetCommandStub
+	fakeReturns := fake.getCommandReturns
+	fake.recordInvocation("GetCommand", []interface{}{})
+	fake.getCommandMutex.Unlock()
+	if stub != nil {
+		return stub()
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeSSHOptions) GetCommandCallCount() int {
+	fake.getCommandMutex.RLock()
+	defer fake.getCommandMutex.RUnlock()
+	return len(fake.getCommandArgsForCall)
+}
+
+func (fake *FakeSSHOptions) GetCommandCalls(stub func() string) {
+	fake.getCommandMutex.Lock()
+	defer fake.getCommandMutex.Unlock()
+	fake.GetCommandStub = stub
+}
+
+func (fake *FakeSSHOptions) GetCommandReturns(result1 string) {
+	fake.getCommandMutex.Lock()
+	defer fake.getCommandMutex.Unlock()
+	fake.GetCommandStub = nil
+	fake.getCommandReturns = struct {
+		result1 string
+	}{result1}
+}
+
+func (fake *FakeSSHOptions) GetCommandReturnsOnCall(i int, result1 string) {
+	fake.getCommandMutex.Lock()
+	defer fake.getCommandMutex.Unlock()
+	fake.GetCommandStub = nil
+	if fake.getCommandReturnsOnCall == nil {
+		fake.getCommandReturnsOnCall = make(map[int]struct {
+			result1 string
+		})
+	}
+	fake.getCommandReturnsOnCall[i] = struct {
 		result1 string
 	}{result1}
 }
@@ -142,13 +216,70 @@ func (fake *FakeSSHOptions) GetCredentialsReturnsOnCall(i int, result1 string, r
 	}{result1, result2}
 }
 
+func (fake *FakeSSHOptions) GetTimeout() time.Duration {
+	fake.getTimeoutMutex.Lock()
+	ret, specificReturn := fake.getTimeoutReturnsOnCall[len(fake.getTimeoutArgsForCall)]
+	fake.getTimeoutArgsForCall = append(fake.getTimeoutArgsForCall, struct {
+	}{})
+	stub := fake.GetTimeoutStub
+	fakeReturns := fake.getTimeoutReturns
+	fake.recordInvocation("GetTimeout", []interface{}{})
+	fake.getTimeoutMutex.Unlock()
+	if stub != nil {
+		return stub()
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeSSHOptions) GetTimeoutCallCount() int {
+	fake.getTimeoutMutex.RLock()
+	defer fake.getTimeoutMutex.RUnlock()
+	return len(fake.getTimeoutArgsForCall)
+}
+
+func (fake *FakeSSHOptions) GetTimeoutCalls(stub func() time.Duration) {
+	fake.getTimeoutMutex.Lock()
+	defer fake.getTimeoutMutex.Unlock()
+	fake.GetTimeoutStub = stub
+}
+
+func (fake *FakeSSHOptions) GetTimeoutReturns(result1 time.Duration) {
+	fake.getTimeoutMutex.Lock()
+	defer fake.getTimeoutMutex.Unlock()
+	fake.GetTimeoutStub = nil
+	fake.getTimeoutReturns = struct {
+		result1 time.Duration
+	}{result1}
+}
+
+func (fake *FakeSSHOptions) GetTimeoutReturnsOnCall(i int, result1 time.Duration) {
+	fake.getTimeoutMutex.Lock()
+	defer fake.getTimeoutMutex.Unlock()
+	fake.GetTimeoutStub = nil
+	if fake.getTimeoutReturnsOnCall == nil {
+		fake.getTimeoutReturnsOnCall = make(map[int]struct {
+			result1 time.Duration
+		})
+	}
+	fake.getTimeoutReturnsOnCall[i] = struct {
+		result1 time.Duration
+	}{result1}
+}
+
 func (fake *FakeSSHOptions) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
 	fake.getAddressMutex.RLock()
 	defer fake.getAddressMutex.RUnlock()
+	fake.getCommandMutex.RLock()
+	defer fake.getCommandMutex.RUnlock()
 	fake.getCredentialsMutex.RLock()
 	defer fake.getCredentialsMutex.RUnlock()
+	fake.getTimeoutMutex.RLock()
+	defer fake.getTimeoutMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value

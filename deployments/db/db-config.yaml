@@ -4,4 +4,6 @@ metadata:
   name: db-config
 data:
   init.sql: |
-    CREATE DATABASE lca;
+    CREATE DATABASE scheduler;
+    CREATE DATABASE cdg;
+    CREATE DATABASE collector;

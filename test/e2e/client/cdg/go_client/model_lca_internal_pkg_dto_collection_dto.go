@@ -10,13 +10,9 @@
 package cdg_client
 
 type LcaInternalPkgDtoCollectionDto struct {
-	Error_ string `json:"error"`
-	Host string `json:"host,omitempty"`
-	Id string `json:"id,omitempty"`
-	Password string `json:"password,omitempty"`
-	Path string `json:"path"`
-	Port int32 `json:"port,omitempty"`
-	Script string `json:"script,omitempty"`
-	Status string `json:"status"`
-	User string `json:"user,omitempty"`
+	CollectionId string `json:"collectionId,omitempty"`
+	Go_ *LcaInternalPkgEventsGoInfo `json:"go,omitempty"`
+	Runs []LcaInternalPkgDtoRunDto `json:"runs,omitempty"`
+	Ssh *LcaInternalPkgEventsSshInfo `json:"ssh,omitempty"`
+	Type_ string `json:"type,omitempty"`
 }

@@ -35,7 +35,7 @@ spec:
           - name: RMQ_URI
             value: amqp://rabbitmq:5672
           - name: DB_CONNECTION
-            value: " "
+            value: "host=db user=postgres password=postgres dbname=collector port=5432 sslmode=disable"
       volumes:
         - name: storage
           persistentVolumeClaim:

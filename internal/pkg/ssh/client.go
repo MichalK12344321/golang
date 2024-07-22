@@ -2,25 +2,24 @@ package ssh
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"github.com/yahoo/vssh"
 )
 
 type SSHClient struct {
-	vs *vssh.VSSH
+	vs      *vssh.VSSH
+	timeout time.Duration
 }
 
 func NewSSHClient() *SSHClient {
 	return &SSHClient{}
 }
 
-func (c *SSHClient) Disconnect() error {
-	return nil
-}
-
 func (c *SSHClient) Connect(options SSHOptions) error {
 	c.vs = vssh.New().Start()
+	c.timeout = options.GetTimeout()
 	config := vssh.GetConfigUserPass(options.GetCredentials())
 	for _, addr := range []string{options.GetAddress()} {
 		c.vs.AddClient(addr, config, vssh.SetMaxSessions(1))
@@ -29,31 +28,39 @@ func (c *SSHClient) Connect(options SSHOptions) error {
 	return err
 }
 
-func (c *SSHClient) Run(ctx context.Context, command string) (string, string, error) {
-	timeout, _ := time.ParseDuration("6s")
-	respChan := c.vs.Run(ctx, command, timeout)
+func (c *SSHClient) Run(ctx context.Context, command string, runData SSHRunData) {
+	respChan := c.vs.Run(ctx, command, c.timeout)
 
+	var waitGroup sync.WaitGroup
 	for resp := range respChan {
 		if err := resp.Err(); err != nil {
-			return "", "", err
+			runData.ErrorChannel() <- err
+			continue
 		}
 
-		return resp.GetText(c.vs)
+		waitGroup.Add(1)
+		go func(resp *vssh.Response) {
+			stream := resp.GetStream()
+			defer stream.Close()
+
+			for stream.ScanStdout() {
+				runData.StdoutChannel() <- stream.BytesStdout()
+			}
+
+			for stream.ScanStderr() {
+				runData.StderrChannel() <- stream.BytesStderr()
+			}
+
+			if err := stream.Err(); err != nil {
+				runData.ErrorChannel() <- err
+			}
+
+			waitGroup.Done()
+		}(resp)
 	}
 
-	return "", "", nil
+	waitGroup.Wait()
+	close(runData.DoneChannel())
 }
 
-type VSSHFactoryProvider struct{}
-
-func NewVSSHFactoryProvider() *VSSHFactoryProvider {
-	return &VSSHFactoryProvider{}
-}
-
-func (p *VSSHFactoryProvider) GetSSHFactory() func() SSH {
-	return func() SSH {
-		return NewSSHClient()
-	}
-}
-
-var _ SSHFactoryProvider = new(VSSHFactoryProvider)
+var _ SSH = new(SSHClient)

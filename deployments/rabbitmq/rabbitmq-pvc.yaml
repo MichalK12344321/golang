@@ -5,7 +5,7 @@ metadata:
 spec:
   # assuming using rancher
   # if not change to name from 'kubectl get storageclass'
-  storageClassName: local-path
+  storageClassName: standard
   accessModes:
     - ReadWriteOnce
   resources:

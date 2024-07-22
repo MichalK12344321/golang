@@ -7,7 +7,7 @@ metadata:
 spec:
   # assuming using rancher
   # if not change to name from 'kubectl get storageclass'
-  storageClassName: local-path
+  storageClassName: standard
   persistentVolumeReclaimPolicy: Retain
   capacity:
     storage: 2Gi

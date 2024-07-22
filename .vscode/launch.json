@@ -9,7 +9,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}\\cmd\\collector\\main.go",
+      "program": "${workspaceFolder}/cmd/collector/main.go",
       "cwd": "${workspaceFolder}",
     },
     {
@@ -17,7 +17,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}\\cmd\\cdg\\main.go",
+      "program": "${workspaceFolder}/cmd/cdg/main.go",
       "cwd": "${workspaceFolder}",
     },
     {
@@ -25,7 +25,15 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}\\cmd\\scheduler\\main.go",
+      "program": "${workspaceFolder}/cmd/scheduler/main.go",
+      "cwd": "${workspaceFolder}",
+    },
+    {
+      "name": "Web",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/cmd/web/main.go",
       "cwd": "${workspaceFolder}",
     }
   ]

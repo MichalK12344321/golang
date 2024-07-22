@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"flag"
-	"io/fs"
 	"lca/api/server"
 	"lca/internal/app/cdg"
 	"lca/internal/app/collector"
@@ -74,7 +73,7 @@ func saveSwagger(ctx context.Context, api *swag.API, logger logging.Logger) erro
 		return nil
 	}
 
-	err = os.WriteFile(path, apiJson, fs.FileMode(os.O_CREATE))
+	err = os.WriteFile(path, apiJson, 0777)
 	if err != nil {
 		logger.Error("%s", err)
 		return nil

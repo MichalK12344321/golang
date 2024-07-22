@@ -1,10 +1,10 @@
 app:
   version: "0.1.0"
   name: collector
-  data-path: "./.temp/data"
+  data-path: "/tmp/lca/data"
 http:
   port: 30030
 rabbitmq:
-  uri: amqp://127.0.0.1:30000
+  uri: amqp://192.168.49.2:30000
 db:
-  uri: " "
+  uri: "host=192.168.49.2 user=postgres password=postgres dbname=collector port=30432 sslmode=disable"

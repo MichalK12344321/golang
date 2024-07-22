@@ -1,8 +1,6 @@
 package broker
 
 import (
-	"lca/internal/pkg/util"
-
 	"github.com/wagslane/go-rabbitmq"
 )
 
@@ -16,9 +14,9 @@ func (payload Payload) ParseBody(target any, parser ParseBodyFn) error {
 	return parser(target, payload.Body, payload.Type)
 }
 
-func (payload Payload) Acknowledge(err ...error) error {
-	if util.AnyErrors(err...) {
-		return payload.Nack(false, true)
+func (payload Payload) Acknowledge(nack bool, requeue bool) error {
+	if nack {
+		return payload.Nack(false, requeue)
 	}
 	return payload.Ack(false)
 }

@@ -10,5 +10,5 @@
 package scheduler_client
 
 type LcaInternalPkgDtoScheduleResponseDto struct {
-	Id string `json:"id"`
+	Runs []LcaInternalPkgDtoRunScheduleDto `json:"runs"`
 }

@@ -50,7 +50,7 @@ func (pub *PublisherRMQ) Publish(data any) error {
 		return fmt.Errorf("failed to parse message %s", err)
 	}
 	correlationId := strings.ReplaceAll(uuid.New().String(), "-", "")
-	pub.logger.Info("PUBLISH '%s' [%s | %s]", dataType, pub.config.RoutingKey, correlationId)
+	pub.logger.Debug("PUBLISH '%s' [%s | %s]\n%s", dataType, pub.config.RoutingKey, correlationId, jsonData)
 	err = pub.publisher.Publish(
 		jsonData,
 		[]string{pub.config.RoutingKey},
@@ -59,6 +59,7 @@ func (pub *PublisherRMQ) Publish(data any) error {
 		rabbitmq.WithPublishOptionsTimestamp(time.Now()),
 		rabbitmq.WithPublishOptionsCorrelationID(correlationId),
 		rabbitmq.WithPublishOptionsType(dataType),
+		rabbitmq.WithPublishOptionsHeaders(pub.config.Headers),
 	)
 	return err
 }

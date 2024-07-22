@@ -23,13 +23,19 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *CollectionApi* | [**GetCollection**](docs/CollectionApi.md#getcollection) | **Get** /collection | Get collection list
 *CollectionApi* | [**GetCollectionId**](docs/CollectionApi.md#getcollectionid) | **Get** /collection/{id} | Get collection
-*CollectionApi* | [**GetCollectionIdArchive**](docs/CollectionApi.md#getcollectionidarchive) | **Get** /collection/{id}/archive | File
+*CollectionApi* | [**GetCollectionRunRunId**](docs/CollectionApi.md#getcollectionrunrunid) | **Get** /collection/run/{runId} | Get run details
+*CollectionApi* | [**GetCollectionRunRunIdArchive**](docs/CollectionApi.md#getcollectionrunrunidarchive) | **Get** /collection/run/{runId}/archive | File
+*DefaultApi* | [**GetHealthz**](docs/DefaultApi.md#gethealthz) | **Get** /healthz | Get application status
 *DefaultApi* | [**GetVersion**](docs/DefaultApi.md#getversion) | **Get** /version | Get application version
 
 
 ## Documentation For Models
 
+ - [LcaApiServerValueObject](docs/LcaApiServerValueObject.md)
  - [LcaInternalPkgDtoCollectionDto](docs/LcaInternalPkgDtoCollectionDto.md)
+ - [LcaInternalPkgDtoRunDto](docs/LcaInternalPkgDtoRunDto.md)
+ - [LcaInternalPkgEventsGoInfo](docs/LcaInternalPkgEventsGoInfo.md)
+ - [LcaInternalPkgEventsSshInfo](docs/LcaInternalPkgEventsSshInfo.md)
 
 
 ## Documentation For Authorization
