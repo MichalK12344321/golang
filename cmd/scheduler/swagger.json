@@ -1,0 +1,305 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.1.0",
+    "title": "scheduler",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/healthz": {
+      "get": {
+        "summary": "Get application status",
+        "operationId": "getHealthz",
+        "produces": [
+          "text/plain"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/lca_api_server.ValueObject"
+            }
+          }
+        }
+      }
+    },
+    "/schedule/go": {
+      "post": {
+        "tags": [
+          "schedule"
+        ],
+        "summary": "Schedule Go collection",
+        "operationId": "postScheduleGo",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/lca_internal_pkg_dto.ScheduleGoCollectionDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "schema": {
+              "$ref": "#/definitions/lca_internal_pkg_dto.ScheduleResponseDto"
+            }
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/schedule/ssh": {
+      "post": {
+        "tags": [
+          "schedule"
+        ],
+        "summary": "Schedule SSH collection",
+        "operationId": "postScheduleSsh",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/lca_internal_pkg_dto.ScheduleSSHCollectionDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "schema": {
+              "$ref": "#/definitions/lca_internal_pkg_dto.ScheduleResponseDto"
+            }
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/terminate": {
+      "post": {
+        "tags": [
+          "schedule"
+        ],
+        "summary": "Terminate log collection",
+        "operationId": "postTerminate",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Terminate request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/lca_internal_pkg_dto.TerminateRequestDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response",
+            "schema": {
+              "$ref": "#/definitions/lca_internal_pkg_dto.TerminateResponseDto"
+            }
+          },
+          "400": {
+            "description": "Failure response"
+          }
+        }
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "Get application version",
+        "operationId": "getVersion",
+        "produces": [
+          "text/plain"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Version number",
+            "schema": {
+              "$ref": "#/definitions/lca_api_server.ValueObject"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "lca_api_server.ValueObject": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "lca_internal_pkg_dto.RunScheduleDto": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "type": "string"
+        },
+        "runId": {
+          "type": "string"
+        }
+      }
+    },
+    "lca_internal_pkg_dto.ScheduleGoCollectionDto": {
+      "type": "object",
+      "required": [
+        "script",
+        "timeout"
+      ],
+      "properties": {
+        "cron": {
+          "type": "string",
+          "description": "cron for repeat collection - leave empty if one off",
+          "example": "* * * * *"
+        },
+        "repeat": {
+          "type": "boolean",
+          "example": "false"
+        },
+        "script": {
+          "type": "string",
+          "example": "package main; func main(){return}"
+        },
+        "timeout": {
+          "type": "string",
+          "example": "5s"
+        }
+      }
+    },
+    "lca_internal_pkg_dto.ScheduleResponseDto": {
+      "type": "object",
+      "required": [
+        "runs"
+      ],
+      "properties": {
+        "runs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/lca_internal_pkg_dto.RunScheduleDto"
+          }
+        }
+      }
+    },
+    "lca_internal_pkg_dto.ScheduleSSHCollectionDto": {
+      "type": "object",
+      "required": [
+        "targets",
+        "script",
+        "timeout"
+      ],
+      "properties": {
+        "cron": {
+          "type": "string",
+          "description": "cron for repeat collection - leave empty if one off",
+          "example": "* * * * *"
+        },
+        "repeat": {
+          "type": "boolean",
+          "example": "false"
+        },
+        "script": {
+          "type": "string",
+          "example": "/scripts/hello.sh"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/lca_internal_pkg_dto.TargetDto"
+          }
+        },
+        "timeout": {
+          "type": "string",
+          "example": "1m"
+        }
+      }
+    },
+    "lca_internal_pkg_dto.TargetDto": {
+      "type": "object",
+      "required": [
+        "host",
+        "port",
+        "user",
+        "password"
+      ],
+      "properties": {
+        "host": {
+          "type": "string",
+          "example": "192.168.49.2"
+        },
+        "password": {
+          "type": "string",
+          "example": "root"
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32",
+          "example": "30022"
+        },
+        "user": {
+          "type": "string",
+          "example": "root"
+        }
+      }
+    },
+    "lca_internal_pkg_dto.TerminateRequestDto": {
+      "type": "object",
+      "required": [
+        "runId"
+      ],
+      "properties": {
+        "runId": {
+          "type": "string",
+          "example": "a0a73fd7-1161-4b5b-bce7-01907c1353c9"
+        }
+      }
+    },
+    "lca_internal_pkg_dto.TerminateResponseDto": {
+      "type": "object"
+    }
+  }
+}

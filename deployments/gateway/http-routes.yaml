@@ -1,0 +1,80 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: routes
+spec:
+  parentRefs:
+    - name: eg
+  hostnames:
+    - "lca.localhost"
+  rules:
+    - backendRefs:
+        - name: scheduler
+          group: ""
+          kind: Service
+          port: 3001
+          weight: 1
+      matches:
+        - path:
+            value: /api/scheduler
+      filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplacePrefixMatch
+            replacePrefixMatch: /
+    - backendRefs:
+        - name: cdg
+          group: ""
+          kind: Service
+          port: 3002
+          weight: 1
+      matches:
+        - path:
+            value: /api/cdg
+      filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplacePrefixMatch
+            replacePrefixMatch: /
+    - backendRefs:
+        - name: collector
+          group: ""
+          kind: Service
+          port: 3003
+          weight: 1
+      matches:
+        - path:
+            value: /api/collector
+      filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplacePrefixMatch
+            replacePrefixMatch: /
+    - backendRefs:
+        - name: web
+          group: ""
+          kind: Service
+          port: 3004
+          weight: 1
+      matches:
+        - path:
+            value: /api/web
+      filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplacePrefixMatch
+            replacePrefixMatch: /
+    - backendRefs:
+        - name: front
+          group: ""
+          kind: Service
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

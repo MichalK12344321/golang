@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq-sts
+spec:
+  serviceName: rabbitmq
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3.13-management
+        env:
+        - name: RABBIT_POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: RABBIT_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+        - name: storage
+          mountPath: /var/lib/rabbitmq
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: rabbitmq-data

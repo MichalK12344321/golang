@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-sts
+spec:
+  serviceName: db
+  selector:
+    matchLabels:
+      app: db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16.2
+          volumeMounts:
+          - name: storage
+            mountPath: /var/lib/postgresql/data
+          - name: init
+            mountPath: /docker-entrypoint-initdb.d/
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1000m"
+          env:
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: postgres
+          - name: POSTGRES_DB
+            value: postgres
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: db-data
+      - name: init
+        configMap:
+          name: db-config

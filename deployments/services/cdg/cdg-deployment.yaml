@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cdg-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cdg
+  template:
+    metadata:
+      labels:
+        app: cdg
+    spec:
+      containers:
+        - name: cdg
+          image: lca-cdg
+          imagePullPolicy: Never
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "500m"
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lca/cdg/data
+          env:
+          - name: APP_NAME
+            value: cdg
+          - name: APP_VERSION
+            value: "0.1.0"
+          - name: APP_DATA_PATH
+            value: "/var/lca/cdg/data"
+          - name: PORT
+            value: "3002"
+          - name: RMQ_URI
+            value: amqp://rabbitmq:5672
+          - name: DB_CONNECTION
+            value: "host=db user=postgres password=postgres dbname=cdg port=5432 sslmode=disable"
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: file-store-data

@@ -1,0 +1,67 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.1.0",
+    "title": "collector",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/healthz": {
+      "get": {
+        "summary": "Get application status",
+        "operationId": "getHealthz",
+        "produces": [
+          "text/plain"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/lca_api_server.ValueObject"
+            }
+          }
+        }
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "Get application version",
+        "operationId": "getVersion",
+        "produces": [
+          "text/plain"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Version number",
+            "schema": {
+              "$ref": "#/definitions/lca_api_server.ValueObject"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "lca_api_server.ValueObject": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

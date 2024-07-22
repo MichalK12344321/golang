@@ -1,0 +1,52 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+manifests:
+  rawYaml:
+    - ./deployments/ne/*
+    - ./deployments/db/*
+    - ./deployments/rabbitmq/*
+    - ./deployments/services/*
+    - ./deployments/services/scheduler/*
+    - ./deployments/services/cdg/*
+    - ./deployments/services/collector/*
+    - ./deployments/services/web/*
+    - ./deployments/services/front/*
+build:
+  tagPolicy:
+    sha256: {}
+  local:
+    push: false
+  artifacts:
+    - image: lca-scheduler
+      context: .
+      docker:
+        noCache: true
+        dockerfile: ./deployments/services/scheduler/Dockerfile
+    - image: lca-cdg
+      context: .
+      docker:
+        noCache: true
+        dockerfile: ./deployments/services/cdg/Dockerfile
+    - image: lca-collector
+      context: .
+      docker:
+        noCache: true
+        dockerfile: ./deployments/services/collector/Dockerfile
+    - image: lca-web
+      context: .
+      docker:
+        noCache: true
+        dockerfile: ./deployments/services/web/Dockerfile
+    - image: lca-front
+      context: .
+      docker:
+        noCache: true
+        dockerfile: ./deployments/services/front/Dockerfile
+    - image: lca-ne
+      context: ./deployments/ne
+      docker:
+        noCache: true
+        dockerfile: Dockerfile
+        buildArgs:
+          PW: root
+
